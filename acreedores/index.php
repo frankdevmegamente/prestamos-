@@ -77,7 +77,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
                             <th>RFC</th>
                             <th>Ciudad</th>
                             <th>Estado</th>
-                            <th></th>
+                            <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -86,13 +86,6 @@ if (($prestamo['estado'] ?? '') === 'pagado' || $saldoBaseVer <= 0) {
 } else {
     $totalCobrarHoy = round($saldoBaseVer + $interesVigenteHoy + $moraActual, 2);
 }
-// Estado calculado al vuelo (igual que listados y morosos): la columna `estado`
-// solo se actualiza al registrar pagos, así que puede estar desactualizada.
-$calcMorosoVer = false;
-if (($prestamo['estado'] ?? '') !== 'pagado' && $saldoBaseVer > 0) {
-    $calcMorosoVer = ($diasAtraso > $graciaAplicable) || esMorosoPorInteres($calcInteresVer['meses'], $interesVigenteHoy);
-}
-$badgeVer = ($prestamo['estado'] ?? '') === 'pagado' ? 'pagado' : ($calcMorosoVer ? 'moroso' : 'activo');
 $calendario = generarCalendario($prestamo, pagosPorCuota($pdo, $id), $config['dias_gracia'] ?? 0);
 // Calendario de cortes de interés: próximos aniversarios desde la base de
 // devengo (último movimiento), con ventana de gracia y día de generación.
@@ -233,7 +226,7 @@ if ($fcInicio === '' || $fcInicio === false) $fcInicio = null;
                     <?php if (!empty($prestamo['fecha_fin'])): ?>
                         <li><span class="info-label">Fecha fin</span><span class="info-value"><?= date('d/m/Y', strtotime($prestamo['fecha_fin'])) ?></span></li>
                     <?php endif; ?>
-                    <li><span class="info-label">Estado</span><span class="info-value"><span class="badge badge-<?= $badgeVer ?>"><?= ucfirst($badgeVer) ?></span></span></li>
+                    <li><span class="info-label">Estado</span><span class="info-value"><span class="badge badge-<?= $prestamo['estado'] ?>"><?= ucfirst($prestamo['estado']) ?></span></span></li>
                     <?php if ($prestamo['observaciones']): ?>
                         <li><span class="info-label">Obs</span><span class="info-value"><?= sanitize($prestamo['observaciones']) ?></span></li>
                     <?php endif; ?>

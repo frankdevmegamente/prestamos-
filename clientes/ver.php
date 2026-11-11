@@ -81,9 +81,9 @@ foreach ($prestamos as $p) {
             <div class="card-header"><i class="bi bi-person-badge"></i> Datos Personales</div>
             <div class="card-body">
                 <ul class="info-list">
-                    <li><span class="info-label">Cédula</span><span class="info-value"><?= sanitize($cliente['cedula']) ?></span></li>
-                    <li><span class="info-label">Teléfono</span><span class="info-value"><?= sanitize($cliente['telefono']) ?></span></li>
-                    <li><span class="info-label">Dirección</span><span class="info-value"><?= sanitize($cliente['direccion']) ?></span></li>
+                    <li><span class="info-label">Razón social</span><span class="info-value"><?= sanitize($cliente['cedula']) ?></span></li>
+                    <li><span class="info-label">Teléfono</span><span class="info-value"><?= sanitize($cliente['telefono'] ?: '-') ?></span></li>
+                    <li><span class="info-label">Dirección</span><span class="info-value"><?= sanitize($cliente['direccion'] ?: '-') ?></span></li>
                     <li><span class="info-label">Email</span><span class="info-value"><?= sanitize($cliente['email'] ?? '-') ?></span></li>
                     <li><span class="info-label">Referencia</span><span class="info-value"><?= sanitize($cliente['referencia_personal'] ?? '-') ?></span></li>
                     <li><span class="info-label">Estado</span><span class="info-value"><span class="badge badge-<?= $cliente['estado'] ?>"><?= ucfirst($cliente['estado']) ?></span></span></li>

@@ -17,24 +17,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = intval($_POST['id'] ?? 0);
     if ($id > 0) {
         try {
-            // La BD puede no tener FKs: verificar en PHP antes de borrar
-            $chk = $pdo->prepare("SELECT COUNT(*) FROM prestamos WHERE cliente_id = ?");
-            $chk->execute([$id]);
-            $totalPrestamos = (int)$chk->fetchColumn();
-            if ($totalPrestamos > 0) {
-                flash('danger', 'No se puede eliminar: el cliente tiene ' . $totalPrestamos . ' préstamo(s) asociados');
-                redirect('index.php');
-            }
-            $stmt = $pdo->prepare("DELETE FROM clientes WHERE id = ?");
-            $stmt->execute([$id]);
-            if ($stmt->rowCount() > 0) {
-                audit($pdo, 'eliminar_cliente', 'clientes', $id, null);
-                flash('success', 'Cliente eliminado exitosamente');
+            $cnt = $pdo->prepare("SELECT COUNT(*) FROM prestamos WHERE cliente_id = ?");
+            $cnt->execute([$id]);
+            $numPrestamos = intval($cnt->fetchColumn());
+            if ($numPrestamos > 0) {
+                $upd = $pdo->prepare("UPDATE clientes SET estado = 'inactivo' WHERE id = ?");
+                $upd->execute([$id]);
+                audit($pdo, 'desactivar_cliente', 'clientes', $id, "tiene $numPrestamos prestamos, baja logica");
+                flash('warning', "No se puede eliminar: tiene $numPrestamos préstamo(s) asociado(s). Se desactivó el cliente (estado inactivo).");
             } else {
-                flash('warning', 'No se encontró el cliente a eliminar');
+                $stmt = $pdo->prepare("DELETE FROM clientes WHERE id = ?");
+                $stmt->execute([$id]);
+                if ($stmt->rowCount() > 0) {
+                    audit($pdo, 'eliminar_cliente', 'clientes', $id, null);
+                    flash('success', 'Cliente eliminado exitosamente');
+                } else {
+                    flash('warning', 'No se encontró el cliente a eliminar');
+                }
             }
         } catch (PDOException $e) {
-            flash('danger', 'No se puede eliminar: el cliente tiene préstamos asociados');
+            error_log("Error eliminando cliente $id: " . $e->getMessage());
+            flash('danger', 'No se puede eliminar: el cliente tiene préstamos asociados (FK). Use desactivar en Editar.');
         }
     }
     redirect('index.php');

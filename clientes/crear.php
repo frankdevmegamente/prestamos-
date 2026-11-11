@@ -39,10 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 error_log("Error creando cliente: " . $e->getMessage());
                 if ($e->getCode() == '23000') {
                     $errors[] = 'Ya existe un cliente con esta razón social (evite doble clic).';
-                } elseif (stripos($e->getMessage(), 'cannot be null') !== false) {
-                    $errors[] = 'La razón social es obligatoria';
                 } else {
-                    $errors[] = 'Error al guardar. Intente de nuevo.';
+                    $errors[] = 'Error al guardar. Posible razón social duplicada o falla de BD.';
                 }
             }
         }

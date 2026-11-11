@@ -18,7 +18,6 @@ if (basename($_SERVER['PHP_SELF']) !== 'login.php' && basename($_SERVER['PHP_SEL
     }
     $scriptPath = str_replace('\\', '/', $_SERVER['PHP_SELF']);
     $isConfigPage = (strpos($scriptPath, '/configuracion/') !== false);
-    // Escape hatch: any logged-in user can reach configuracion during maintenance to disable it.
     if ($maintenanceActive && !isAdmin() && !$isConfigPage) {
         http_response_code(503);
         $bp = defined('BASE_PATH') ? BASE_PATH : '/';
@@ -58,7 +57,7 @@ function isMenuActive($section) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="<?= getBasePath() ?>assets/css/style.css?v=5" rel="stylesheet">
+    <link href="<?= getBasePath() ?>assets/css/style.css?v=7" rel="stylesheet">
 </head>
 <body>
     <div class="app-layout">

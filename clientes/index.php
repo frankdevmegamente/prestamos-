@@ -47,7 +47,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
 <div class="search-bar animate-in">
     <i class="bi bi-search"></i>
     <form method="GET">
-        <input type="text" name="buscar" placeholder="Buscar por nombre, cédula o teléfono..." value="<?= sanitize($busqueda) ?>">
+        <input type="text" name="buscar" placeholder="Buscar por nombre, razón social o teléfono..." value="<?= sanitize($busqueda) ?>">
         <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
         <?php if ($busqueda): ?>
             <a href="index.php" class="btn btn-outline-secondary btn-sm">Limpiar</a>
@@ -73,11 +73,11 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
                         <tr>
                             <th>#</th>
                             <th>Nombre</th>
-                            <th>Cédula</th>
+                            <th>Razón social</th>
                             <th>Teléfono</th>
                             <th>Estado</th>
                             <th>Registro</th>
-                            <th></th>
+                            <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,7 +86,7 @@ $totalPaginas = ceil($totalRegistros / $porPagina);
                                 <td style="color:var(--text-muted);"><?= $offset + $i + 1 ?></td>
                                 <td><strong><?= sanitize($cliente['nombre'] . ' ' . $cliente['apellido']) ?></strong></td>
                                 <td><?= sanitize($cliente['cedula']) ?></td>
-                                <td><?= sanitize($cliente['telefono']) ?></td>
+                                <td><?= sanitize($cliente['telefono'] ?: '-') ?></td>
                                 <td><span class="badge badge-<?= $cliente['estado'] ?>"><?= ucfirst($cliente['estado']) ?></span></td>
                                 <td style="font-size:0.78rem; color:var(--text-muted);"><?= date('d/m/Y', strtotime($cliente['fecha_registro'])) ?></td>
                                 <td>

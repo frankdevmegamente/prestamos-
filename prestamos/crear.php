@@ -368,10 +368,10 @@ require_once __DIR__ . '/../includes/header.php';
                 <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; font-weight:600;">Total del préstamo</div>
                 <div class="fw-bold" id="confTotalHero" style="font-size:1.6rem; color:var(--accent);">—</div>
                 <div style="font-size:0.78rem; color:var(--text-muted);" id="confDesglose">—</div>
-                <div class="mt-2" id="cobrarInteresRow">
+                <div class="mt-3" id="cobrarInteresRow" style="display:none !important;">
                     <div class="btn-group" role="group" aria-label="Modalidad de interés">
-                        <button type="button" class="btn btn-sm btn-primary" id="btnConInteres"><i class="bi bi-percent"></i> Con interés</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btnSinInteres">Sin interés</button>
+                        <button type="button" class="btn btn-sm btn-primary" id="btnConInteres" style="min-width:110px;"><i class="bi bi-percent"></i> Con interés</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btnSinInteres" style="min-width:110px;">Sin interés</button>
                     </div>
                 </div>
                 <div class="form-text" id="sinInteresAviso" style="display:none; color:var(--danger); font-size:0.75rem;">Sin interés: el cliente devuelve solo el capital (tasa 0%).</div>
@@ -472,7 +472,8 @@ function llenarConfirmacion() {
         // Héroe del total con interés cargado + modalidad (definidos e indefinidos).
         // Indefinidos con interés: 1er mes por adelantado desde el día 1.
         var esInd = document.getElementById('esIndefinido').checked;
-        document.getElementById('cobrarInteresRow').style.display = '';
+        // Ocultar botones Con/Sin interés en paso 3 según requerimiento
+        document.getElementById('cobrarInteresRow').style.display = 'none';
         pintarModoInteres();
         var off = document.getElementById('sinInteresInput').value === '1';
         var apalSin = off && document.getElementById('fuenteFondos').value === 'apalancado';
@@ -577,6 +578,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (tasaDeuda !== undefined) {
             hint.textContent = 'Tu deuda activa con este acreedor: ' + tasaDeuda + '% mensual';
             hint.style.display = '';
+            // Auto-rellena la tasa si el campo está vacío (mejora UX, evita error "Ingrese la tasa")
+            if (tasaAcreedorInput && (tasaAcreedorInput.value === '' || tasaAcreedorInput.value === '0')) {
+                tasaAcreedorInput.value = tasaDeuda;
+            }
             const t = parseFloat(tasaAcreedorInput.value) || 0;
             if (t > 0 && Math.abs(t - tasaDeuda) > 0.001) {
                 warn.textContent = '⚠️ Difiere de tu deuda activa (' + tasaDeuda + '%). Tu utilidad real será otra.';
@@ -715,6 +720,9 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleAcreedor();
     toggleIndefinido();
     pintarModoInteres();
+    // Mantener ocultos los botones Con/Sin interés en paso 3
+    var row = document.getElementById('cobrarInteresRow');
+    if (row) { row.style.display = 'none'; }
 });
 </script>
 

@@ -29,18 +29,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $estado = $_POST['estado'] ?? 'activo';
         if (!in_array($estado, ['activo', 'inactivo'], true)) $estado = 'activo';
 
-        if (empty($nombre)) $errors[] = 'El nombre es obligatorio';
-        if (empty($apellido)) $errors[] = 'El apellido es obligatorio';
-        if (empty($cedula)) $errors[] = 'La cédula es obligatoria';
-        if (empty($telefono)) $errors[] = 'El teléfono es obligatorio';
-        if (empty($direccion)) $errors[] = 'La dirección es obligatoria';
+        // Nombre y apellido ahora son opcionales
+        if (empty($cedula)) $errors[] = 'La razón social es obligatoria';
+        // Teléfono y dirección ahora son opcionales
         if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'El email no es válido';
-        if (!preg_match('/^[0-9+\-\s()]{6,20}$/', $telefono)) $errors[] = 'El teléfono no es válido (6-20 dígitos)';
+        if ($telefono !== '' && !preg_match('/^[0-9+\-\s()]{6,20}$/', $telefono)) $errors[] = 'El teléfono no es válido (6-20 dígitos)';
 
         if (empty($errors)) {
             $stmt = $pdo->prepare("SELECT id FROM clientes WHERE cedula = ? AND id != ?");
             $stmt->execute([$cedula, $id]);
-            if ($stmt->fetch()) $errors[] = 'Ya existe otro cliente con esta cédula';
+            if ($stmt->fetch()) $errors[] = 'Ya existe otro cliente con esta razón social';
         }
 
         if (empty($errors)) {
@@ -51,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             redirect('index.php');
             } catch (PDOException $e) {
                 error_log("Error editando cliente: " . $e->getMessage());
-                $errors[] = 'Error al actualizar. Posible cédula duplicada o falla de BD.';
+                $errors[] = 'Error al actualizar. Posible razón social duplicada o falla de BD.';
             }
         }
     }
@@ -94,32 +92,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="row">
                 <div class="col-md-6">
                     <div class="floating-group">
-                        <input type="text" name="nombre" placeholder=" " value="<?= sanitize($nombre) ?>" required maxlength="100">
-                        <label>Nombre *</label>
+                        <input type="text" name="nombre" placeholder=" " value="<?= sanitize($nombre) ?>" maxlength="100">
+                        <label>Nombre</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="floating-group">
-                        <input type="text" name="apellido" placeholder=" " value="<?= sanitize($apellido) ?>" required maxlength="100">
-                        <label>Apellido *</label>
+                        <input type="text" name="apellido" placeholder=" " value="<?= sanitize($apellido) ?>" maxlength="100">
+                        <label>Apellido</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="floating-group">
-                        <input type="text" name="cedula" placeholder=" " value="<?= sanitize($cedula) ?>" required maxlength="20">
-                        <label>Cédula *</label>
+                        <input type="text" name="cedula" placeholder=" " value="<?= sanitize($cedula) ?>" required maxlength="150">
+                        <label>Razón social *</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="floating-group">
-                        <input type="text" name="telefono" placeholder=" " value="<?= sanitize($telefono) ?>" required maxlength="20">
-                        <label>Teléfono *</label>
+                        <input type="text" name="telefono" placeholder=" " value="<?= sanitize($telefono) ?>" maxlength="20">
+                        <label>Teléfono</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="floating-group">
-                        <input type="text" name="direccion" placeholder=" " value="<?= sanitize($direccion) ?>" required maxlength="255">
-                        <label>Dirección *</label>
+                        <input type="text" name="direccion" placeholder=" " value="<?= sanitize($direccion) ?>" maxlength="255">
+                        <label>Dirección</label>
                     </div>
                 </div>
                 <div class="col-md-6">

@@ -10,8 +10,9 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
-# Datos y backups
-produccion/
-PLANTILLA*.xlsx
+# Datos, backups y logs
 prestamos_db*.sql
+backup*.sql
 *.xlsx
+error_log
+*.log

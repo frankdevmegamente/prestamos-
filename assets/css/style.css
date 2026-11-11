@@ -860,6 +860,14 @@ a:hover { color: var(--accent-hover); }
     animation: fadeUp 0.3s ease-out;
 }
 
+/* Fix: botones Con/Sin interés ocultos en paso 3 */
+#cobrarInteresRow {
+    display: none !important;
+}
+#panel3 .p-3.text-center {
+    overflow: visible !important;
+}
+
 /* --- Timeline --- */
 .timeline {
     position: relative;
