@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# Bloquear acceso directo a sensibles
+<FilesMatch "^(\.env|.*\.sql|.*\.xlsx)$">
+    Require all denied
+</FilesMatch>
+Options -Indexes
+
+# No reescribir archivos del directorio auth
+RewriteCond %{REQUEST_URI} !/auth/
+# Si el archivo solicitado no existe, enviar a index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]

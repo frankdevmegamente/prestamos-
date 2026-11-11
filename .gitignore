@@ -1,0 +1,17 @@
+# Environment variables
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Datos y backups
+produccion/
+PLANTILLA*.xlsx
+prestamos_db*.sql
+*.xlsx
